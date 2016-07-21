@@ -16,7 +16,7 @@ namespace SignalRTextChat
             }
             catch(Exception e)
             {
-                Clients.All.broadcastMessage(name, message);
+                Clients.Group("Global").broadcastMessage(name, message);
             }
             
         }

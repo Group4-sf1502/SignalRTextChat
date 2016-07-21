@@ -13,6 +13,7 @@
     </style>
     <div class="box">
         <input type="text" id="roomname" placeholder="Enter room name here" />
+        <input type="button" id="enterroom" value="Enter" />
         <input type="button" id="leaveroom" value="Leave" disabled />
         <input type="text" id="message" placeholder="Enter message here" />
         <input type="button" id="sendmessage" value="Send" />
@@ -32,7 +33,7 @@
             // Declare a proxy to reference the hub.
             var chat = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
-            chat.client.broadcastMessage = function (name, message) {
+            chat.client.broadcastMessage = function (name, message, roomname) {
                 // Html encode display name and message.
                 var encodedName = $('<div />').text(name).html();
                 var encodedMsg = $('<div />').text(message).html();
@@ -54,17 +55,28 @@
             $('#message').focus();
             // Start the connection
             $.connection.hub.start().done(function () {
-                $('#sendmessage').click(function () {
-                    chat.server.joinRoom($('#roomname').val());
+                $('#enterroom').click(function () {
+                    //Call the JoinRoom method on the hub
+                    if ($('#roomname').val() === "") {
+                        chat.server.joinRoom("Global");
+                    }
+                    else {
+                        chat.server.joinRoom($('#roomname').val());
+                    }
+                    enterroom.disabled = true;
+                    leaveroom.disabled = false;
+                });
+                $('#sendmessage').click(function () {                    
                     // Call the Send method on the hub.
                     chat.server.send($('#displayname').val(), $('#message').val(), $('#roomname').val());
                     // Clear text box and reset focus for next comment.
-                    $('#message').val('').focus();
-                    $('#leaveroom').removeAttr('disabled');
+                    $('#message').val('').focus();                    
                 });
                 $('#leaveroom').click(function () {
                     chat.server.leaveRoom($('#roomname').val());
                     $('#roomname').val('');
+                    enterroom.disabled = false;
+                    leaveroom.disabled = true;
                 });
             });
         });
