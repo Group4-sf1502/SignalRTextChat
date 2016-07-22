@@ -37,6 +37,7 @@
                 // Html encode display name and message.
                 var encodedName = $('<div />').text(name).html();
                 var encodedMsg = $('<div />').text(message).html();
+                var encodeRoomName = $('<div />').text(roomname).html();
                 // Add the message to the page.
                 $('#discussion').append('<li><strong>' + encodedName
                     + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
@@ -58,6 +59,7 @@
                 $('#enterroom').click(function () {
                     //Call the JoinRoom method on the hub
                     if ($('#roomname').val() === "") {
+                        //Clients will join a room called Global when the RoomName is null
                         chat.server.joinRoom("Global");
                     }
                     else {
@@ -65,18 +67,26 @@
                     }
                     enterroom.disabled = true;
                     leaveroom.disabled = false;
+                    roomname.disabled = true;
                 });
-                $('#sendmessage').click(function () {                    
-                    // Call the Send method on the hub.
-                    chat.server.send($('#displayname').val(), $('#message').val(), $('#roomname').val());
-                    // Clear text box and reset focus for next comment.
-                    $('#message').val('').focus();                    
+                $('#sendmessage').click(function () {
+                    if ($('#message').val() === "") {
+                        //Don't allow them to spam empty messages
+                    }
+                    else {
+                        // Call the Send method on the hub.
+                        chat.server.send($('#displayname').val(), $('#message').val(), $('#roomname').val());
+                        // Clear text box and reset focus for next comment.
+                        $('#message').val('').focus();
+                    }                   
                 });
                 $('#leaveroom').click(function () {
+                    //Call the LeaveRoom method on the hub
                     chat.server.leaveRoom($('#roomname').val());
                     $('#roomname').val('');
                     enterroom.disabled = false;
                     leaveroom.disabled = true;
+                    roomname.disabled = false;
                 });
             });
         });
