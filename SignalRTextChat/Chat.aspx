@@ -10,6 +10,9 @@
             padding: 20px;
             margin: 20px;
         }
+        .box ul {
+            list-style-type:none;
+        }
     </style>
     <div class="box">
         <input type="text" id="roomname" placeholder="Enter room name here" />
@@ -61,9 +64,12 @@
                     if ($('#roomname').val() === "") {
                         //Clients will join a room called Global when the RoomName is null
                         chat.server.joinRoom("Global");
+                        $('#discussion').append('<li><strong>You joined the Global Chat Room</strong></li>')
                     }
                     else {
                         chat.server.joinRoom($('#roomname').val());
+                        var _roomname = $('#roomname').val();
+                        $('#discussion').append('<li><strong>You joined the ' + _roomname + ' Chat Room</strong></li>');
                     }
                     enterroom.disabled = true;
                     leaveroom.disabled = false;
@@ -83,6 +89,7 @@
                 $('#leaveroom').click(function () {
                     //Call the LeaveRoom method on the hub
                     chat.server.leaveRoom($('#roomname').val());
+                    $('#discussion').append('<li><strong>You left the room</strong></li>')
                     $('#roomname').val('');
                     enterroom.disabled = false;
                     leaveroom.disabled = true;
