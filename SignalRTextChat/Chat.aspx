@@ -9,15 +9,23 @@
             border: thick solid #808080;
             padding: 20px;
             margin: 20px;
+            text-align:justify;
         }
         .box ul {
             list-style-type:none;
+            border: 1px solid black;
+            margin-top:20px;
+        }
+        .box #message {
+            margin-top:20px;
+            width:inherit;
         }
     </style>
     <div class="box">
         <input type="text" id="roomname" placeholder="Enter room name here" />
         <input type="button" id="enterroom" value="Enter" />
         <input type="button" id="leaveroom" value="Leave" disabled />
+        <br />
         <input type="text" id="message" placeholder="Enter message here" />
         <input type="button" id="sendmessage" value="Send" />
         <input type="hidden" id="displayname" />
@@ -71,6 +79,7 @@
                         var _roomname = $('#roomname').val();
                         $('#discussion').append('<li><strong>You joined the ' + _roomname + ' Chat Room</strong></li>');
                     }
+                    $('#message').val('').focus();
                     enterroom.disabled = true;
                     leaveroom.disabled = false;
                     roomname.disabled = true;
@@ -86,11 +95,24 @@
                         $('#message').val('').focus();
                     }                   
                 });
+                $(document).keydown(function (e) {
+                    if (e.which == 13 || e.keyCode == 13) {
+                        if ($('#message').val() === "") {
+                            //Don't allow them to spam empty messages
+                        }
+                        else {
+                            // Call the Send method on the hub.
+                            chat.server.send($('#displayname').val(), $('#message').val(), $('#roomname').val());
+                            // Clear text box and reset focus for next comment.
+                            $('#message').val('').focus();
+                        }
+                    }
+                });
                 $('#leaveroom').click(function () {
                     //Call the LeaveRoom method on the hub
                     chat.server.leaveRoom($('#roomname').val());
                     $('#discussion').append('<li><strong>You left the room</strong></li>')
-                    $('#roomname').val('');
+                    $('#roomname').val('').focus();
                     enterroom.disabled = false;
                     leaveroom.disabled = true;
                     roomname.disabled = false;

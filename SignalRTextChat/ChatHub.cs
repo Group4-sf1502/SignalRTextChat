@@ -10,15 +10,23 @@ namespace SignalRTextChat
     {
         public void Send(string name, string message, string roomname)
         {
-            try
+            if(roomname != "")
             {
                 Clients.Group(roomname).addMessage(name, message);
             }
-            catch(Exception e)
+            else
             {
                 Clients.Group("Global").broadcastMessage(name, message);
             }
-            
+            //try
+            //{
+            //    Clients.Group(roomname).addMessage(name, message);
+            //}
+            //catch(Exception e)
+            //{
+            //    Clients.Group("Global").broadcastMessage(name, message);
+            //}
+
         }
 
         public void JoinRoom(string roomname)
