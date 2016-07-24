@@ -31,6 +31,11 @@
         <input type="hidden" id="displayname" />
         <ul id="discussion"></ul>
     </div>
+
+    <div>
+        <p>Number of online users</p>
+        <p id="usersCount"></p>
+    </div>
     <!--Script references. -->
     <!--Reference the jQuery library. -->
     <script src="Scripts/jquery-1.10.2.min.js"></script>
@@ -60,6 +65,10 @@
                 // Add the message to the page.
                 $('#discussion').append('<li><strong>' + encodedName
                     + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            };
+
+            chat.client.updateUsersOnlineCount = function (count) {
+                $('#usersCount').text(count);
             };
             // Get the user name and store it to prepend to messages.
             $('#displayname').val(prompt('Enter your name:', ''));
