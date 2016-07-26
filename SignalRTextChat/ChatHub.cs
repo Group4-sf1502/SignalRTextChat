@@ -9,10 +9,12 @@ namespace SignalRTextChat
 {
     public class ChatHub : Hub
     {
+        //public static string username = getUsername();
         public static List<string> Users = new List<string>();
 
         public void Send(string name, string message, string roomname)
         {
+            //name = username
             if(roomname != "")
             {
                 Clients.Group(roomname).addMessage(name, message);
@@ -93,6 +95,11 @@ namespace SignalRTextChat
             }
 
             return clientId;
+        }
+
+        private static string getUsername()
+        {
+            return "";
         }
     }
 }
