@@ -18,14 +18,21 @@
             height:200px;
             overflow-y:scroll;
         }
+        .box ul li {
+            margin:5px;
+        }
         .box #message {
             margin-top:20px;
             width:95%;
             max-width:none;
         }
+        .box #roomname {
+            width:50%;
+            max-width:none;
+        }
     </style>
     <div class="box">
-        <input type="text" id="roomname" placeholder="Enter room name here" />
+        <input type="text" id="roomname" placeholder="Please enter room name here" />
         <input type="button" id="enterroom" value="Enter" />
         <input type="button" id="leaveroom" value="Leave" disabled />
         <br />
@@ -39,6 +46,7 @@
         <p>Number of online users</p>
         <p id="usersCount"></p>
     </div>
+
     <!--Script references. -->
     <!--Reference the jQuery library. -->
     <script src="Scripts/jquery-1.10.2.min.js"></script>
@@ -51,12 +59,13 @@
         $(function () {
             // Declare a proxy to reference the hub.
             var chat = $.connection.chatHub;
+            message.disabled = true;
             // Create a function that the hub can call to broadcast messages.
             chat.client.broadcastMessage = function (name, message, roomname) {
                 // Html encode display name and message.
                 var encodedName = $('<div />').text(name).html();
                 var encodedMsg = $('<div />').text(message).html();
-                var encodeRoomName = $('<div />').text(roomname).html();
+                var encodedRoomName = $('<div />').text(roomname).html();
                 // Add the message to the page.
                 $('#discussion').append('<li><strong>' + encodedName
                     + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
@@ -65,6 +74,7 @@
                 // Html encode display name and message.
                 var encodedName = $('<div />').text(name).html();
                 var encodedMsg = $('<div />').text(message).html();
+                var encodedRoomName = $('<div />').text(roomname).html();
                 // Add the message to the page.
                 $('#discussion').append('<li><strong>' + encodedName
                     + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
@@ -84,7 +94,7 @@
                     if ($('#roomname').val() === "") {
                         //Clients will join a room called Global when the RoomName is null
                         chat.server.joinRoom("Global");
-                        $('#discussion').append('<li><strong>You joined the Global Chat Room</strong></li>')
+                        $('#discussion').append('<li style="color:red;"><strong>You joined the Global Chat Room</strong></li>')
                     }
                     else {
                         chat.server.joinRoom($('#roomname').val());
@@ -95,6 +105,7 @@
                     enterroom.disabled = true;
                     leaveroom.disabled = false;
                     roomname.disabled = true;
+                    message.disabled = false;
                 });
                 $('#sendmessage').click(function () {
                     if ($('#message').val() === "") {
@@ -123,11 +134,12 @@
                 $('#leaveroom').click(function () {
                     //Call the LeaveRoom method on the hub
                     chat.server.leaveRoom($('#roomname').val());
-                    $('#discussion').append('<li><strong>You left the room</strong></li>')
+                    $('#discussion').append('<li style="color:red;"><strong>You left the room</strong></li>')
                     $('#roomname').val('').focus();
                     enterroom.disabled = false;
                     leaveroom.disabled = true;
                     roomname.disabled = false;
+                    message.disabled = true;
                 });
             });
         });
