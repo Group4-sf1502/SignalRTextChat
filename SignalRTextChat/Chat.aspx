@@ -15,10 +15,13 @@
             list-style-type:none;
             border: 1px solid black;
             margin-top:20px;
+            height:200px;
+            overflow-y:scroll;
         }
         .box #message {
             margin-top:20px;
-            width:inherit;
+            width:95%;
+            max-width:none;
         }
     </style>
     <div class="box">
