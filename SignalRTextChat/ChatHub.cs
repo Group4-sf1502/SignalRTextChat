@@ -14,31 +14,14 @@ namespace SignalRTextChat
 
         public void Send(string name, string message, string roomname)
         {
-            //name = username
-            if(roomname != "")
+            if (roomname != "")
             {
-                Clients.Group(roomname).addMessage(name, message);
+                Clients.Group(roomname).addChatMessage(name, message);
             }
             else
             {
-                Clients.Group("Global").broadcastMessage(name, message);
+                Clients.Group("Global").addChatMessage(name, message);
             }
-
-            //try
-            //{
-            //    Clients.Group(roomname).addMessage(name, message);
-            //}
-            //catch(Exception e)
-            //{
-            //    Clients.Group("Global").broadcastMessage(name, message);
-            //}
-
-        }
-
-        public void Count(int count)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-            context.Clients.All.updateUsersOnlineCount(count);
         }
 
         public void JoinRoom(string roomname)
@@ -49,6 +32,12 @@ namespace SignalRTextChat
         public void LeaveRoom(string roomname)
         {
             Groups.Remove(Context.ConnectionId, roomname);
+        }
+
+        public void Count(int count)
+        {
+            var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+            context.Clients.All.updateUsersOnlineCount(count);
         }
 
         public override Task OnConnected()
@@ -84,7 +73,7 @@ namespace SignalRTextChat
         private string GetClientId()
         {
             string clientId = "";
-            if(Context.QueryString["clientId"] != null)
+            if (Context.QueryString["clientId"] != null)
             {
                 clientId = this.Context.QueryString["clientId"];
             }
