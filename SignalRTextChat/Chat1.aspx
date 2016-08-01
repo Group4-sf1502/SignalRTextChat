@@ -31,10 +31,10 @@
         </style>
 
         <div id="box">
+            <p id="getroom" style="display:inline;"></p>
             <ul id="discussion"></ul>
             <p>Message:<input type="text" id="entermessage" placeholder="Enter message here" /><input type="button" value="Send" id="sendmessage" /></p>
             <input type="hidden" id="displayname" />
-            <input type="hidden" id="getroom" />
 
             <div id="online">
                 <p>Number of Online Users</p>
@@ -66,9 +66,10 @@
                 $('#entermessage').focus();
 
                 $.connection.hub.start().done(function () {
-                    $('#getroom').val(localStorage.room);
-                    chat.server.joinRoom($('#getroom').val());
-                    $('#discussion').append('<li style="color:red;"><strong>You joined the ' + $('#getroom').val() + ' Chat Room</strong></li>');
+                    $('#getroom').text(localStorage.room);
+                    $('#getroom').append('<input type="button" id="leave" value="Leave" />');
+                    chat.server.joinRoom($('#getroom').text());
+                    //$('#discussion').append('<li style="color:red;"><strong>You joined the ' + $('#getroom').val() + ' Chat Room</strong></li>');
 
                     $('#entermessage').val('').focus();
 
@@ -77,7 +78,7 @@
 
                         }
                         else {
-                            chat.server.send($('#displayname').val(), $('#entermessage').val(), $('#getroom').val());
+                            chat.server.send($('#displayname').val(), $('#entermessage').val(), $('#getroom').text());
                             $('#entermessage').val('').focus;
                         }
                     });
@@ -88,12 +89,16 @@
                             }
                             else {
                                 // Call the Send method on the hub.
-                                chat.server.send($('#displayname').val(), $('#entermessage').val(), $('#getroom').val());
+                                chat.server.send($('#displayname').val(), $('#entermessage').val(), $('#getroom').text());
                                 // Clear text box and reset focus for next comment.
                                 $('#entermessage').val('').focus();
                             }
                             e.preventDefault();
                         }
+                    });
+                    $('#leave').click(function () {
+                        chat.server.leaveRoom($('#getroom').text());
+                        window.close();
                     });
                 });
             });
