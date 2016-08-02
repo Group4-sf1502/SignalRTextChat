@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <!DOCTYPE html>
     <html>
-        <input type="button" id="test" value="Test" />
+        <input type="button" id="test" value="Create a chat room" />
         <input type="hidden" id="roomname" />
 
         <script src="Scripts/jquery-1.10.2.min.js"></script>

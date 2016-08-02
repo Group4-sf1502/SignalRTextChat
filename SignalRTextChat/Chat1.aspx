@@ -19,7 +19,9 @@
                 list-style-type:none;
                 margin-top:20px;
                 height:200px;
-                overflow-y:scroll;
+                max-height:200px;
+                overflow-y:auto;
+                overflow-x:auto;
             }
             p input {
                 margin:5px;
@@ -55,7 +57,9 @@
                     var encodedMsg = $("<div />").text(message).html();
                     var encodedRoom = $("<div />").text(roomname).html();
 
-                    $('#discussion').append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '<li>');
+                    $('#discussion').append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '<li>');\
+                    //Method to automatically scroll down to the bottom of the chat box message
+                    $('#discussion').animate({ scrollTop: $('#discussion').prop("scrollHeight") }, 500);
                 };
 
                 chat.client.updateUsersOnlineCount = function (count) {
@@ -63,13 +67,13 @@
                 };
 
                 $('#displayname').val(prompt('Please enter your name:', ''));
+                $('#discussion').append('<li style="color:red;"><strong> Welcome ' + $('#displayname').val() + '!');
                 $('#entermessage').focus();
 
                 $.connection.hub.start().done(function () {
                     $('#getroom').text(localStorage.room);
                     $('#getroom').append('<input type="button" id="leave" value="Leave" />');
                     chat.server.joinRoom($('#getroom').text());
-                    //$('#discussion').append('<li style="color:red;"><strong>You joined the ' + $('#getroom').val() + ' Chat Room</strong></li>');
 
                     $('#entermessage').val('').focus();
 
