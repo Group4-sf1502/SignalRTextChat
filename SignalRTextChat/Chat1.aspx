@@ -57,9 +57,9 @@
                     var encodedMsg = $("<div />").text(message).html();
                     var encodedRoom = $("<div />").text(roomname).html();
 
-                    $('#discussion').append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '<li>');\
+                    $('#discussion').append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
                     //Method to automatically scroll down to the bottom of the chat box message
-                    $('#discussion').animate({ scrollTop: $('#discussion').prop("scrollHeight") }, 500);
+                    $('#discussion').animate({ scrollTop: $('#discussion').prop("scrollHeight") }, 10);
                 };
 
                 chat.client.updateUsersOnlineCount = function (count) {
