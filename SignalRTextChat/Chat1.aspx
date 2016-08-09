@@ -71,8 +71,8 @@
                 $('#entermessage').focus();
 
                 $.connection.hub.start().done(function () {
-                    $('#getroom').text(localStorage.room);
-                    $('#getroom').append('<input type="button" id="leave" value="Leave" />');
+                    $('#getroom').text(sessionStorage.room);
+                    $('#getroom').append('<input type="button" id="leave" value="Leave" />');                    
                     chat.server.joinRoom($('#getroom').text());
 
                     $('#entermessage').val('').focus();
@@ -102,7 +102,7 @@
                     });
                     $('#leave').click(function () {
                         chat.server.leaveRoom($('#getroom').text());
-                        window.close();
+                        window.location.href = "ChatTest.aspx";
                     });
                 });
             });
